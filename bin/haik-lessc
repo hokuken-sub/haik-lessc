@@ -1,0 +1,103 @@
+#!/bin/bash
+#
+# compile less file for haik-skin
+# copyright 2013 Hokuken.Inc http://www.hokuken.com/
+#
+# 1. compile less/color.*.less -> css/color.*.css
+# 2. compile less/texture.*.less -> css/texture.*.css
+#
+# usage
+# % cd [haik-dir]
+# % haik-lessc
+# or
+# % haik-lessc [haik-dir]
+#
+
+less_compile() {
+	echo "compile less files in $1"
+	echo
+
+	# color less
+	for lessfile in `ls ${1}less/color.* | grep -v color.less`
+	do
+		color=`basename $lessfile | cut -d . -f 2`
+		cssfile="${1}css/color.$color.css"
+		echo "$lessfile -> $cssfile"
+
+		lessc $lessfiel > $cssfile
+	done
+	echo
+
+	#texture less
+	for lessfile in `ls $1/less/texture.* | grep -v texture.less`
+	do
+		texture=`basename $lessfile | cut -d . -f 2`
+		cssfile="${1}css/texture.$texture.css"
+		echo "$lessfile -> $cssfile"
+
+		lessc $lessfiel > $cssfile
+	done
+}
+show_usage() {
+	
+	echo haik-lessc is simple way to compile ALL less files in haik
+	echo
+	echo   Usage:
+	echo     haik-lessc
+	echo     haik-lessc [path-to-haik]
+	echo     haik-lessc --help
+	echo
+
+}
+
+# options check
+
+if [ $1 == "--help" ]; then
+	show_usage
+	exit
+fi
+
+
+if type lessc 2>/dev/null; then
+	echo "[OK] lessc exists"
+else
+	echo "[NG] lessc does not exist"
+	exit 1
+fi
+echo
+
+target=.
+if [ $1 ]; then
+	target=$1
+fi
+
+if [ -d "$target/haik-contents" ]; then
+	echo "target dir is haik root"
+	skindir=$target/haik-contents/skin/
+elif [ -d "$target/less" ]; then
+	echo "target dir is skin dir"
+	skindir=$target/../
+else
+	echo "cannot find less dir"
+	exit 1
+fi
+
+echo
+echo "skin dir is $skindir"
+echo
+
+for theskindir in `ls -F $skindir | grep /`
+do
+	echo "$theskindir has ..."
+	if [ -d $skindir/${theskindir}less ]; then
+		echo "less files!"
+		echo
+		less_compile ${skindir}$theskindir
+	else
+		echo "no less files..."
+	fi
+	echo
+done
+
+echo
+echo "compile finished!"
