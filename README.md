@@ -9,18 +9,19 @@ Requirements
 -------------
 
 * bash
+* lessc
 
 
-Installion
+Installation
 -----------
 
-1. clone git repository to your home.
+1. clone git repository to your home.  
     `% clone git://github.com/toiee/haik-lessc.git ~/.haik-lessc`
-2. export PATH
+2. export PATH  
     `% echo 'export PATH=~/.haik-lessc/bin:$PATH' >> ~/.bash_profile`
-3. restart shell
+3. restart shell  
     `% source ~/.bash_profile`
-4. check haik-lessc
+4. check haik-lessc  
     `% haik-lessc --help`
 
 
